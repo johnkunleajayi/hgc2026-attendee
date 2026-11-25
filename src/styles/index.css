@@ -1,0 +1,85 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter Variable", Inter, system-ui, sans-serif;
+  --radius-panel: 1rem;
+  --radius-action: 0.625rem;
+}
+
+:root {
+  color-scheme: light;
+  --surface: var(--brand-paper);
+  --page: var(--brand-paper);
+  --text: var(--brand-ink);
+  --secondary-text: color-mix(in srgb, var(--text) 80%, var(--surface));
+  --border: color-mix(in srgb, var(--text) 37%, var(--surface));
+  --soft-border: color-mix(in srgb, var(--text) 17%, var(--surface));
+  --soft: color-mix(in srgb, var(--text) 5%, var(--surface));
+  --primary: var(--brand-green);
+  --primary-text: var(--brand-paper);
+  --focus: var(--brand-green);
+  --danger: var(--brand-red);
+  --disabled: var(--soft);
+  --footer: var(--brand-paper);
+  --page-gutter: clamp(1rem, 4vw, 4rem);
+  --content-width: 78rem;
+  --quick: 180ms;
+}
+
+@layer base {
+  html { scroll-behavior: smooth; }
+  body { background: var(--page); color: var(--text); @apply font-sans antialiased; }
+  h1 { line-height: 1.05; font-size: clamp(2.4rem, 6vw, 5rem); font-weight: 830; letter-spacing: -.065em; }
+  p { line-height: 1.55; }
+  :focus-visible { outline: 2px solid var(--focus); outline-offset: 4px; }
+  main:focus { outline: none; }
+}
+
+@layer components {
+  .content-container, .header-inner, .page-shell {
+    width: min(100% - 2 * var(--page-gutter), var(--content-width));
+    margin-inline: auto;
+  }
+
+  .site-header { border-bottom: 1px solid var(--soft-border); background: var(--surface); position: relative; z-index: 2; }
+  .header-inner { display: flex; justify-content: space-between; align-items: center; gap: .75rem; min-height: 76px; padding-block: .65rem; }
+  .wordmark { display: flex; align-items: center; gap: .75rem; font-size: .86rem; font-weight: 740; }
+  .wordmark span:first-child { border-right: 1px solid var(--border); padding-right: .75rem; color: var(--primary); letter-spacing: .08em; }
+  .header-inner nav { display: flex; align-items: center; gap: .35rem; }
+  .header-inner nav a:not(.primary-link), .menu-toggle {
+    display: inline-flex; align-items: center; min-height: 44px; padding: .55rem .8rem;
+    gap: .5rem; border-radius: var(--radius-action); font-size: .875rem; font-weight: 650;
+  }
+  .header-inner nav a:not(.primary-link):hover, .header-inner nav a:not(.primary-link)[aria-current="page"], .menu-toggle:hover {
+    background: var(--soft);
+  }
+  .header-inner nav a[aria-current="page"] { text-decoration: underline; text-underline-offset: .28em; }
+  .menu-toggle { display: none; }
+  .page-shell { padding-block: clamp(2rem, 5vw, 4rem); }
+  .primary-link, .secondary-link {
+    display: inline-flex; align-items: center; justify-content: center; gap: .55rem;
+    min-height: 48px; border-radius: var(--radius-action); padding: .55rem 1.15rem;
+    font-weight: 720; font-size: .88rem;
+    transition: background-color var(--quick), color var(--quick);
+  }
+  .primary-link { background: var(--primary); color: var(--primary-text); border: 1px solid transparent; }
+  .primary-link:hover:not(:disabled) { background: var(--text); color: var(--surface); }
+  .primary-link:disabled { color: var(--secondary-text); background: var(--disabled); border-color: var(--soft-border); cursor: not-allowed; }
+  .secondary-link { border: 1px solid var(--border); }
+  .secondary-link:hover { background: var(--soft); }
+  .surface { background: var(--soft); border-radius: var(--radius-panel); padding: 1.5rem; }
+  .skip-link { position: absolute; z-index: 5; inset: .5rem auto auto var(--page-gutter); transform: translateY(-150%); background: var(--surface); padding: .75rem; }
+  .skip-link:focus { transform: none; }
+
+  @media (width < 48rem) {
+    .menu-toggle { display: inline-flex; }
+    .header-inner nav { display: none; position: absolute; inset: 100% var(--page-gutter) auto; padding: .7rem; border: 1px solid var(--border); border-radius: var(--radius-action); background: var(--surface); }
+    .header-inner nav[data-expanded="true"] { display: grid; align-items: stretch; }
+    .header-inner nav .primary-link { justify-content: flex-start; }
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root { --quick: 0ms; }
+  html { scroll-behavior: auto; }
+}
